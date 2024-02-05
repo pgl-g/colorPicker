@@ -10,12 +10,18 @@ dependencies:
     version: 4.1.1(@babel/core@7.23.9)(@types/react@18.2.48)(eslint@8.56.0)(prettier@3.2.4)(react-dom@18.2.0)(react@18.2.0)(stylelint@14.16.1)(typescript@5.3.3)(webpack@5.90.0)
 
 devDependencies:
+  '@ctrl/tinycolor':
+    specifier: ^4.0.3
+    version: 4.0.3
   '@types/react':
     specifier: ^18.2.48
     version: 18.2.48
   '@types/react-dom':
     specifier: ^18.2.18
     version: 18.2.18
+  classnames:
+    specifier: ^2.5.1
+    version: 2.5.1
   typescript:
     specifier: ^5.3.3
     version: 5.3.3
@@ -556,6 +562,11 @@ packages:
     dependencies:
       postcss-selector-parser: 6.0.15
     dev: false
+
+  /@ctrl/tinycolor@4.0.3:
+    resolution: {integrity: sha512-e9nEVehVJwkymQpkGhdSNzLT2Lr9UTTby+JePq4Z2SxBbOQjY7pLgSouAaXvfaGQVSAaY0U4eJdwfSDmCbItcw==}
+    engines: {node: '>=14'}
+    dev: true
 
   /@esbuild/android-arm64@0.17.19:
     resolution: {integrity: sha512-KBMWvEZooR7+kzY0BtbTQn0OAYY7CsiydT63pVEaPtVYF0hXbUaOyZog37DKxK7NF3XacBJOpYT4adIJh+avxA==}
@@ -2796,6 +2807,10 @@ packages:
       inherits: 2.0.4
       safe-buffer: 5.2.1
     dev: false
+
+  /classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
+    dev: true
 
   /clean-css@5.3.3:
     resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==}
