@@ -1,1 +1,3 @@
-# pnpm
+# colorPricker
+
+## 取色器
