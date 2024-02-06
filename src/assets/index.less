@@ -7,6 +7,9 @@
 @sm-handler-size: 12px;
 @handler-border-size: 2px;
 @shadow-2-down:0px 3px 6px -4px rgba(0, 0, 0, 0.12),0px 6px 16px 0px rgba(0, 0, 0, 0.08),0px 9px 28px 8px rgba(0, 0, 0, 0.05);
+@bg-color: rgba(46, 50, 56, 0.05);
+@color: rgba(28, 31, 35, 1);
+@border-color: rgba(28, 31, 35, 0.08);
 
 .@{ColorPickerPrefixCls} {
   position: absolute;
@@ -71,17 +74,17 @@
       border-radius: @inner-border-radius;
     }
     &-alpha {
-      background: url('./alpha.svg');
+      background: url("./alpha.svg");
     }
   }
 
   &-color-block {
     position: relative;
-    width: 28px;
-    height: 28px;
-    margin-left: 8px;
+    width: 20px;
+    height: 20px;
+    // margin-left: 8px;
     overflow: hidden;
-    background-image: url('./alpha.svg');
+    background-image: url("./alpha.svg");
     border-radius: @inner-border-radius;
     &-inner {
       box-sizing: border-box;
@@ -98,9 +101,81 @@
       &-disabled-alpha {
         display: flex;
         align-items: center;
-        .@{ColorPickerPrefixCls}-slider{
-            margin-bottom: 0;
+        .@{ColorPickerPrefixCls}-slider {
+          margin-bottom: 0;
         }
+      }
+    }
+  }
+  &-colorPart {
+    display: flex;
+    align-items: center;
+    .@{ColorPickerPrefixCls}-colorPart-inputGroup {
+      display: flex;
+      margin-left: 4px;
+      flex-wrap: nowrap;
+      width: 170px;
+
+      .@{ColorPickerPrefixCls}-input-warp {
+        position: relative;
+        background-color: @bg-color;
+        border: 1px transparent solid;
+        color: @color;
+        &:not(:last-child)::after {
+          content: "";
+          background-color: @border-color;
+          width: 1px;
+          position: absolute;
+          right: -1px;
+          top: 1px;
+          bottom: 1px;
+        }
+      }
+
+      .@{ColorPickerPrefixCls}-input-number {
+        width: 100px;
+        .@{ColorPickerPrefixCls}-input-suffix {
+          display: inline-flex;
+          align-items: center;
+          input {
+            padding-right: 0;
+          }
+          .@{ColorPickerPrefixCls}-suffix {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .@{ColorPickerPrefixCls}-inputNumberSuffix {
+              font-size: 14px;
+              padding: 0 4px;
+            }
+          }
+        }
+      }
+
+      input {
+        border: none;
+        outline: none;
+        width: 100%;
+        color: inherit;
+        background-color: transparent;
+        box-sizing: border-box;
+        height: 22px;
+        line-height: 22px;
+        font-size: 14px;
+        padding: 0 12px;
+      }
+    }
+    .@{ColorPickerPrefixCls}-colorPart-select {
+      width: 80px;
+      margin-left: 4px;
+
+      select {
+        border: none;
+        outline: none;
+        width: 100%;
+        height: 25.5px;
+        line-height: 25.5px;
+        background-color: @bg-color;
       }
     }
   }

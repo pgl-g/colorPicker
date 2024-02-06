@@ -53,6 +53,7 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
     rgb.setAlpha(1);
     return rgb.toRgbString();
   }, [colorValue]);
+
   const mergeCls = classNames(`${prefixCls}-panel`, className, {
     [`${prefixCls}-panel-disabled`]: disabled,
   });
@@ -99,7 +100,34 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
           )}
         </div>
         {/* 色块 */}
+        {/* <ColorBlock color={colorValue.toRgbString()} prefixCls={prefixCls} /> */}
+      </div>
+
+      <div className={`${prefixCls}-colorPart`}>
+        {/* 色块 */}
         <ColorBlock color={colorValue.toRgbString()} prefixCls={prefixCls} />
+        {/* 输入框 */}
+        <div className={`${prefixCls}-colorPart-inputGroup`}>
+          <div className={`${prefixCls}-input-warp`}>
+            <input type="text" className={`${prefixCls}-colorValue-inputTxt`} />
+          </div>
+          <div className={`${prefixCls}-input-number`}>
+            <div className={`${prefixCls}-input-warp ${prefixCls}-input-suffix`}>
+              <input type="text" step={1} aria-aria-valuemin={0} aria-valuemax={100} value={100} aria-valuenow={100} className={`${prefixCls}-colorValue-inputNum`} />
+              <div className={`${prefixCls}-suffix`}>
+                <span className={`${prefixCls}-inputNumberSuffix`}>%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* 选择抗 */}
+        <div className={`${prefixCls}-colorPart-select`}>
+          <select name="" id="" >
+            <option value="hex">hex</option>
+            <option value="rgba">rgba</option>
+            <option value="hsva">hsva</option>
+          </select>
+        </div>
       </div>
     </>
   );

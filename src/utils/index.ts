@@ -11,6 +11,7 @@ export const generateColor = (color: ColorGenInput): Color => {
   if (color instanceof Color) {
     return color;
   }
+
   return new Color(color);
 };
 
@@ -49,6 +50,7 @@ export const calculateColor = (props: {
         });
     }
   }
+
 
   return generateColor({
     h: hsb.h,
