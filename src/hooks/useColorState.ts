@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Color } from '../pages/color';
 import type { ColorGenInput } from '../pages/interface';
-import { generateColor } from '../pages/util';
+import { generateColor } from '../utils';
 
 type ColorValue = ColorGenInput | undefined;
 

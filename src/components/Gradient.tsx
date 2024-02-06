@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import React, { useMemo } from 'react';
 import type { Color } from '../pages/color';
 import type { HsbaColorType } from '../pages/interface';
-import { generateColor } from '../pages/util';
+import { generateColor } from '../utils';
 
 const Gradient: FC<{
   colors: (Color | string)[];

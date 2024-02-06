@@ -1,12 +1,12 @@
 import type { CSSProperties } from 'react';
 import React, { forwardRef, useMemo } from 'react';
-import { ColorPickerPrefixCls, defaultColor, generateColor } from './util';
+import { ColorPickerPrefixCls, defaultColor, generateColor } from '../utils';
 
 import classNames from 'classnames';
-import ColorBlock from '../components/ColorBlock';
-import Picker from '../components/Picker';
-import Slider from '../components/Slider';
-import useColorState from '../hooks/useColorState';
+import ColorBlock from '@/components/ColorBlock';
+import Picker from '@/components/Picker';
+import Slider from '@/components/Slider';
+import useColorState from '@/hooks/useColorState';
 import type { BaseColorPickerProps, ColorGenInput } from './interface';
 
 const hueColor = [
@@ -71,7 +71,9 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
 
   const defaultPanel = (
     <>
+      {/* 面板 */}
       <Picker color={colorValue} onChange={handleChange} {...basicProps} />
+      {/* 颜色滑块 */}
       <div className={`${prefixCls}-slider-container`}>
         <div
           className={classNames(`${prefixCls}-slider-group`, {
@@ -96,6 +98,7 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
             />
           )}
         </div>
+        {/* 色块 */}
         <ColorBlock color={colorValue.toRgbString()} prefixCls={prefixCls} />
       </div>
     </>

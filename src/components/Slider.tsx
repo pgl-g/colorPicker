@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import React, { useRef } from 'react';
 import useColorDrag from '../hooks/useColorDrag';
 import type { BaseColorPickerProps, HsbaColorType } from '../pages/interface';
-import { calculateColor, calculateOffset } from '../pages/util';
+import { calculateColor, calculateOffset } from '../utils';
 import Palette from './Palette';
 
 import Gradient from './Gradient';

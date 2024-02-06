@@ -1,9 +1,9 @@
-import { Color } from './color';
+import { Color } from '../pages/color';
 import type {
   ColorGenInput,
   HsbaColorType,
   TransformOffset,
-} from './interface';
+} from '../pages/interface';
 
 export const ColorPickerPrefixCls = 'rc-color-picker';
 

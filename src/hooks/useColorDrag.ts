@@ -1,3 +1,7 @@
+/**
+ * @description 监听鼠标落点及移动的最新坐标
+ */
+
 import { useEffect, useRef, useState } from 'react';
 import type { Color } from '../pages/color';
 import type { TransformOffset } from '../pages/interface';
@@ -25,6 +29,7 @@ interface useColorDragProps {
   disabledDrag?: boolean;
 }
 
+// 获取点位置
 function getPosition(e: EventType) {
   const obj = 'touches' in e ? e.touches[0] : e;
   const scrollXOffset =
@@ -35,6 +40,7 @@ function getPosition(e: EventType) {
     document.documentElement.scrollTop ||
     document.body.scrollTop ||
     window.pageYOffset;
+  console.log()
   return { pageX: obj.pageX - scrollXOffset, pageY: obj.pageY - scrollYOffset };
 }
 
@@ -59,6 +65,7 @@ function useColorDrag(
     flag: false,
   });
 
+  // 记录默认初识坐标点
   useEffect(() => {
     if (dragRef.current.flag === false) {
       const calcOffset = calculate?.(containerRef);
@@ -80,6 +87,7 @@ function useColorDrag(
     [],
   );
 
+  // 更新偏移量
   const updateOffset: EventHandle = e => {
     const { pageX, pageY } = getPosition(e);
     const {
@@ -87,12 +95,16 @@ function useColorDrag(
       y: rectY,
       width,
       height,
-    } = containerRef.current.getBoundingClientRect();
+    } = containerRef.current.getBoundingClientRect(); // 当前面板： 返回一个矩形集合，表示当前盒子在浏览器的位置及空间的大小
     const { width: targetWidth, height: targetHeight } =
-      targetRef.current.getBoundingClientRect();
+      targetRef.current.getBoundingClientRect(); // 当前点击的点：
 
+
+    // 获取点占据面板的偏移量
     const centerOffsetX = targetWidth / 2;
     const centerOffsetY = targetHeight / 2;
+    console.log(targetWidth, targetHeight, '点的高及宽');
+
 
     const offsetX = Math.max(0, Math.min(pageX - rectX, width)) - centerOffsetX;
     const offsetY =
@@ -112,11 +124,14 @@ function useColorDrag(
     }
 
     setOffsetValue(calcOffset);
+    // 获取最新的坐标点
+    console.log(calcOffset, '计算最新坐标点')
     onDragChange?.(calcOffset);
   };
 
   const onDragMove: EventHandle = e => {
     e.preventDefault();
+    console.log('鼠标移动')
     updateOffset(e);
   };
 
@@ -129,10 +144,12 @@ function useColorDrag(
     document.removeEventListener('touchend', mouseUpRef.current);
     mouseMoveRef.current = null;
     mouseUpRef.current = null;
+    console.log('鼠标停下')
     onDragChangeComplete?.();
   };
 
   const onDragStart: EventHandle = e => {
+    console.log('鼠标开始')
     // https://github.com/ant-design/ant-design/issues/43529
     document.removeEventListener('mousemove', mouseMoveRef.current);
     document.removeEventListener('mouseup', mouseUpRef.current);
