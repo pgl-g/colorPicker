@@ -12,6 +12,7 @@ export const generateColor = (color: ColorGenInput): Color => {
     return color;
   }
 
+
   return new Color(color);
 };
 
@@ -36,6 +37,8 @@ export const calculateColor = (props: {
   const alphaOffset = saturation;
   const hueOffset = ((offset.x + centerOffsetX) / width) * 360;
 
+
+  // TODO：这里是根据slider进行配置
   if (type) {
     switch (type) {
       case 'hue':

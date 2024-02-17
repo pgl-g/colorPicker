@@ -26,6 +26,7 @@ const useColorState = (
     } else {
       mergeState = defaultStateValue;
     }
+    // console.log(mergeState, 'mergeState')
     return generateColor(mergeState);
   });
 
@@ -34,6 +35,8 @@ const useColorState = (
       setColorValue(generateColor(value));
     }
   }, [value]);
+  // console.log(colorValue, 'colorValue');
+
 
   return [colorValue, setColorValue];
 };

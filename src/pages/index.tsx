@@ -10,7 +10,7 @@ export default function HomePage() {
         // console.log(color, type, '颜色')
       }}
         onChangeComplete={(val) => {
-          // console.log(val, 'sss')
+          // console.log(val.toHex(), 'sss')
         }}
       />
     </div>

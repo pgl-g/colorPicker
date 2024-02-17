@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import React, { forwardRef, useMemo } from 'react';
+import React, { forwardRef, useMemo, useState, useRef } from 'react';
 import { ColorPickerPrefixCls, defaultColor, generateColor } from '../utils';
 
 import classNames from 'classnames';
@@ -18,6 +18,22 @@ const hueColor = [
   'rgb(255, 0, 255) 83%',
   'rgb(255, 0, 0) 100%',
 ];
+
+
+const colorConfig = [
+  {
+    value: 'hex',
+    key: 'hex'
+  },
+  {
+    value: 'rgba',
+    key: 'rgba'
+  },
+  {
+    value: 'hsva',
+    key: 'hsva'
+  },
+]
 
 export interface ColorPickerProps extends BaseColorPickerProps {
   value?: ColorGenInput;
@@ -47,6 +63,10 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
     value,
     defaultValue,
   });
+
+  const [selectValue, setSelectValue] = useState('hex');
+  const [alphaValue, setAlphaValue] = useState(100)
+
   const alphaColor = useMemo(() => {
     const rgb = generateColor(colorValue.toRgbString());
     // alpha color need equal 1 for base color
@@ -67,8 +87,44 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
     if (!value) {
       setColorValue(data);
     }
+
+    if (type === 'alpha') {
+      const alphaVal = ((data.a * 100) / 100).toFixed(2) * 100;
+      console.log(alphaVal, 'alphaVal');
+
+      setAlphaValue(alphaVal)
+    }
+
     onChange?.(data, type);
   };
+
+
+  // TODO: 为啥这部分不生效？
+  const handleSuffix = (e: any) => {
+    const { value } = e.target;
+    setAlphaValue(Number(value));
+  }
+
+
+  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    setSelectValue(value);
+  }
+
+
+
+  const selectModeNode = useMemo(() => {
+    switch (selectValue) {
+      case 'hex':
+        return colorValue.toHexString()
+      case 'rgba':
+        const { r, g, b } = colorValue.toRgb()
+        return [r, g, b].join(',');
+      default:
+        const { h, s, v } = colorValue.toHsv();
+        return [h, s, v].map(item => Math.ceil(Number(item))).join(',');
+    }
+  }, [selectValue, colorValue])
 
   const defaultPanel = (
     <>
@@ -93,7 +149,8 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
               type="alpha"
               gradientColors={['rgba(255, 0, 4, 0) 0%', alphaColor]}
               color={colorValue}
-              value={colorValue.toRgbString()}
+              // value={colorValue.toRgbString()}
+              value={alphaValue}
               onChange={color => handleChange(color, 'alpha')}
               {...basicProps}
             />
@@ -109,11 +166,11 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
         {/* 输入框 */}
         <div className={`${prefixCls}-colorPart-inputGroup`}>
           <div className={`${prefixCls}-input-warp`}>
-            <input type="text" className={`${prefixCls}-colorValue-inputTxt`} />
+            <input type="text" className={`${prefixCls}-colorValue-inputTxt`} value={selectModeNode} />
           </div>
           <div className={`${prefixCls}-input-number`}>
             <div className={`${prefixCls}-input-warp ${prefixCls}-input-suffix`}>
-              <input type="text" step={1} aria-aria-valuemin={0} aria-valuemax={100} value={100} aria-valuenow={100} className={`${prefixCls}-colorValue-inputNum`} />
+              <input type="text" step={1} aria-aria-valuemin={0} aria-valuemax="100" value={alphaValue} aria-valuenow={100} className={`${prefixCls}-colorValue-inputNum`} onChange={handleSuffix} />
               <div className={`${prefixCls}-suffix`}>
                 <span className={`${prefixCls}-inputNumberSuffix`}>%</span>
               </div>
@@ -122,10 +179,12 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
         </div>
         {/* 选择抗 */}
         <div className={`${prefixCls}-colorPart-select`}>
-          <select name="" id="" >
-            <option value="hex">hex</option>
-            <option value="rgba">rgba</option>
-            <option value="hsva">hsva</option>
+          <select onChange={(e) => onSelectChange(e)}>
+            {
+              colorConfig.map(item => (
+                <option key={item.key} value={item.value}>{item.value}</option>
+              ))
+            }
           </select>
         </div>
       </div>
