@@ -25,6 +25,7 @@ const Gradient: FC<{
     [colors, type],
   );
 
+
   return (
     <div
       className={`${prefixCls}-gradient`}

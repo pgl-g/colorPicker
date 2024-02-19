@@ -8,6 +8,8 @@ const Handler: FC<{
   color?: string;
   prefixCls?: string;
 }> = ({ size = 'default', color, prefixCls }) => {
+
+
   return (
     <div
       className={classNames(`${prefixCls}-handler`, {

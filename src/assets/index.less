@@ -16,7 +16,8 @@
   z-index: 1;
   display: block;
   width: max-content;
-  min-width: 258px;
+  // min-width: 288px;
+  min-width: 310px;
   visibility: visible;
   &-hidden {
     display: none;
@@ -24,7 +25,7 @@
   &-panel {
     display: flex;
     flex-direction: column;
-    width: 258px;
+    width: 280px;
     padding: @vertical-space;
     background-color: #fff;
     border-radius: @outer-border-radius;
@@ -35,7 +36,8 @@
   }
   &-select {
     .@{ColorPickerPrefixCls}-palette {
-      min-height: 160px;
+      // min-height: 160px;
+      min-height: 280px;
       overflow: hidden;
       border-radius: @inner-border-radius;
       & > .@{ColorPickerPrefixCls}-gradient {
@@ -114,7 +116,7 @@
       display: flex;
       margin-left: 4px;
       flex-wrap: nowrap;
-      width: 170px;
+      width: 180px;
 
       .@{ColorPickerPrefixCls}-input-warp {
         position: relative;

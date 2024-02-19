@@ -22,16 +22,16 @@ const hueColor = [
 
 const colorConfig = [
   {
-    value: 'hex',
-    key: 'hex'
+    value: 'HEX',
+    key: 'HEX'
   },
   {
-    value: 'rgba',
-    key: 'rgba'
+    value: 'RGB',
+    key: 'RGB'
   },
   {
-    value: 'hsva',
-    key: 'hsva'
+    value: 'HSB',
+    key: 'HSB'
   },
 ]
 
@@ -64,12 +64,13 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
     defaultValue,
   });
 
-  const [selectValue, setSelectValue] = useState('hex');
-  const [alphaValue, setAlphaValue] = useState(100)
+  const [selectValue, setSelectValue] = useState('HEX');
+  const [alphaValue, setAlphaValue] = useState('100') as any;
 
   const alphaColor = useMemo(() => {
     const rgb = generateColor(colorValue.toRgbString());
     // alpha color need equal 1 for base color
+    // console.log(rgb, 'rgb')
     rgb.setAlpha(1);
     return rgb.toRgbString();
   }, [colorValue]);
@@ -87,22 +88,30 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
     if (!value) {
       setColorValue(data);
     }
-
     if (type === 'alpha') {
       const alphaVal = ((data.a * 100) / 100).toFixed(2) * 100;
-      console.log(alphaVal, 'alphaVal');
-
       setAlphaValue(alphaVal)
     }
-
     onChange?.(data, type);
   };
 
 
-  // TODO: 为啥这部分不生效？
-  const handleSuffix = (e: any) => {
-    const { value } = e.target;
-    setAlphaValue(Number(value));
+  // TODO: 可优
+  const handleSuffix = (e: any, type: string) => {
+    const { value: val } = e.target;
+
+    const hsb = colorValue.toHsb();
+
+    hsb.a = (val || 0) / 100;
+
+    const genColor = generateColor(hsb)
+
+    if (!value) {
+      setColorValue(genColor);
+    }
+
+
+    setAlphaValue(val);
   }
 
 
@@ -115,16 +124,24 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
 
   const selectModeNode = useMemo(() => {
     switch (selectValue) {
-      case 'hex':
+      case 'HEX':
         return colorValue.toHexString()
-      case 'rgba':
-        const { r, g, b } = colorValue.toRgb()
-        return [r, g, b].join(',');
+      case 'RGB':
+        const { r, g, b: rB } = colorValue.toRgb()
+        return [r, g, rB].join(',');
       default:
-        const { h, s, v } = colorValue.toHsv();
-        return [h, s, v].map(item => Math.ceil(Number(item))).join(',');
+        const { h, s, b } = colorValue.toHsb();
+        // TODO: 这里还需要进行处理
+        const hsbH = Math.floor(Number(h));
+        const hsbS = `${Math.floor(Number(s) * 100)}%`;
+        const hsbB = `${Math.floor(Number(b) * 100)}%`;
+        return [hsbH, hsbS, hsbB].join(',');
     }
   }, [selectValue, colorValue])
+
+
+  
+  // console.log(colorValue, '2')
 
   const defaultPanel = (
     <>
@@ -149,8 +166,8 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
               type="alpha"
               gradientColors={['rgba(255, 0, 4, 0) 0%', alphaColor]}
               color={colorValue}
-              // value={colorValue.toRgbString()}
-              value={alphaValue}
+              value={colorValue.toRgbString()}
+              // value={alphaValue}
               onChange={color => handleChange(color, 'alpha')}
               {...basicProps}
             />
@@ -170,7 +187,16 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
           </div>
           <div className={`${prefixCls}-input-number`}>
             <div className={`${prefixCls}-input-warp ${prefixCls}-input-suffix`}>
-              <input type="text" step={1} aria-aria-valuemin={0} aria-valuemax="100" value={alphaValue} aria-valuenow={100} className={`${prefixCls}-colorValue-inputNum`} onChange={handleSuffix} />
+              <input 
+                type="text" 
+                step={1} 
+                aria-aria-valuemin={0} 
+                aria-valuemax="100" 
+                value={alphaValue} 
+                aria-valuenow={100} 
+                className={`${prefixCls}-colorValue-inputNum`} 
+                onChange={(e: any) => handleSuffix(e, 'alpha')}
+              />
               <div className={`${prefixCls}-suffix`}>
                 <span className={`${prefixCls}-inputNumberSuffix`}>%</span>
               </div>

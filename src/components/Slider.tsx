@@ -46,7 +46,7 @@ const Slider: FC<SliderProps> = ({
         type,
       });
       colorRef.current = calcColor;
-      onChange(calcColor);
+      onChange?.(calcColor);
     },
     onDragChangeComplete() {
       onChangeComplete?.(colorRef.current, type);
