@@ -100,6 +100,10 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
   const handleSuffix = (e: any, type: string) => {
     const { value: val } = e.target;
 
+
+    if (val < 0 || val > 100) return false;
+
+
     const hsb = colorValue.toHsb();
 
     hsb.a = (val || 0) / 100;
@@ -109,7 +113,6 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
     if (!value) {
       setColorValue(genColor);
     }
-
 
     setAlphaValue(val);
   }
@@ -141,7 +144,6 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
 
 
   
-  // console.log(colorValue, '2')
 
   const defaultPanel = (
     <>
@@ -188,12 +190,11 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
           <div className={`${prefixCls}-input-number`}>
             <div className={`${prefixCls}-input-warp ${prefixCls}-input-suffix`}>
               <input 
-                type="text" 
+                type="number" 
                 step={1} 
-                aria-aria-valuemin={0} 
-                aria-valuemax="100" 
-                value={alphaValue} 
-                aria-valuenow={100} 
+                value={alphaValue}
+                min={0}
+                max={100} 
                 className={`${prefixCls}-colorValue-inputNum`} 
                 onChange={(e: any) => handleSuffix(e, 'alpha')}
               />
