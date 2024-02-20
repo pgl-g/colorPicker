@@ -21,18 +21,18 @@ const hueColor = [
 
 
 const colorConfig = [
-  {
-    value: 'HEX',
-    key: 'HEX'
-  },
+  // {
+  //   value: 'HEX',
+  //   key: 'HEX'
+  // },
   {
     value: 'RGB',
     key: 'RGB'
   },
-  {
-    value: 'HSB',
-    key: 'HSB'
-  },
+  // {
+  //   value: 'HSB',
+  //   key: 'HSB'
+  // },
 ]
 
 export interface ColorPickerProps extends BaseColorPickerProps {
@@ -64,7 +64,7 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
     defaultValue,
   });
 
-  const [selectValue, setSelectValue] = useState('HEX');
+  const [selectValue, setSelectValue] = useState('RGB');
   const [alphaValue, setAlphaValue] = useState('100') as any;
 
   const alphaColor = useMemo(() => {
