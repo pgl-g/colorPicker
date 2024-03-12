@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import React, { forwardRef, useMemo, useState, useRef } from 'react';
+import React, { forwardRef, useMemo, useState, useRef, useEffect } from 'react';
 import { ColorPickerPrefixCls, defaultColor, generateColor } from '../utils';
 
 import classNames from 'classnames';
@@ -46,6 +46,24 @@ export interface ColorPickerProps extends BaseColorPickerProps {
   disabledAlpha?: boolean;
 }
 
+
+function CheckIsColor(colorValue: { match: (arg0: RegExp) => null; }) {
+  var type = "^\#[0-9a-fA-F]{6}{1}$";
+  var re = new RegExp(type);
+  if (colorValue.match(re) == null) {
+      type = "^[rR][gG][Bb][\(]((2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?),){2}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\)]{1}$";
+      re = new RegExp(type);
+      if (colorValue.match(re) == null) {
+          alert("no");
+      } else {
+          alert("yes");
+      }
+  } else {
+      alert("yes");
+  }
+}
+
+
 export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
   const {
     value,
@@ -66,6 +84,7 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
 
   const [selectValue, setSelectValue] = useState('RGB');
   const [alphaValue, setAlphaValue] = useState('100') as any;
+  const [modeNode, setModeNode] = useState<string>('');
 
   const alphaColor = useMemo(() => {
     const rgb = generateColor(colorValue.toRgbString());
@@ -99,22 +118,34 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
   // TODO: 可优
   const handleSuffix = (e: any, type: string) => {
     const { value: val } = e.target;
-
-
     if (val < 0 || val > 100) return false;
-
-
     const hsb = colorValue.toHsb();
-
     hsb.a = (val || 0) / 100;
-
     const genColor = generateColor(hsb)
-
     if (!value) {
       setColorValue(genColor);
     }
-
     setAlphaValue(val);
+  }
+
+
+  const handleChangeVal = (e: any) => {
+    const { value: v } = e.target;
+    // TODO：目前处理rgb后期可能会出现其他格式
+    const rgb = colorValue.toRgb();
+    var rgbRegex = /^(\d+),\s*(\d+),\s*(\d+)$/; 
+    const partsRGB = v.match(rgbRegex);
+    if (partsRGB && partsRGB.length > 0) {
+      rgb.r = partsRGB?.[1];
+      rgb.g = partsRGB?.[2];
+      rgb.b = partsRGB?.[3];
+
+      const genColor = generateColor(rgb);
+      if (!value) {
+        setColorValue(genColor)
+      }
+    }
+    setModeNode(v);
   }
 
 
@@ -124,26 +155,35 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
   }
 
 
+  // TODO: 后期处理
+  // const selectModeNode = useMemo(() => {
+  //   switch (selectValue) {
+  //     case 'HEX':
+  //       return colorValue.toHexString();
+  //     case 'RGB':
+  //       const { r, g, b: rB } = colorValue.toRgb();
+  //       return [r, g, rB].join(',');
+  //     default:
+  //       const { h, s, b } = colorValue.toHsb();
+  //       // TODO: 这里还需要进行处理
+  //       const hsbH = Math.floor(Number(h));
+  //       const hsbS = `${Math.floor(Number(s) * 100)}%`;
+  //       const hsbB = `${Math.floor(Number(b) * 100)}%`;
+  //       return [hsbH, hsbS, hsbB].join(',');
+  //   }
+  // }, [selectValue, colorValue]);
 
-  const selectModeNode = useMemo(() => {
-    switch (selectValue) {
-      case 'HEX':
-        return colorValue.toHexString()
-      case 'RGB':
-        const { r, g, b: rB } = colorValue.toRgb()
-        return [r, g, rB].join(',');
-      default:
-        const { h, s, b } = colorValue.toHsb();
-        // TODO: 这里还需要进行处理
-        const hsbH = Math.floor(Number(h));
-        const hsbS = `${Math.floor(Number(s) * 100)}%`;
-        const hsbB = `${Math.floor(Number(b) * 100)}%`;
-        return [hsbH, hsbS, hsbB].join(',');
-    }
+
+  useEffect(() => {
+  if (selectValue === 'RGB') {
+    const { r, g, b: rB } = colorValue.toRgb();
+    const rgbStr = [r, g, rB].join(',');
+    setModeNode(rgbStr)
+  }
   }, [selectValue, colorValue])
 
 
-  
+  // console.log(selectModeNode, '=-=-=-=')
 
   const defaultPanel = (
     <>
@@ -182,10 +222,10 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
       <div className={`${prefixCls}-colorPart`}>
         {/* 色块 */}
         <ColorBlock color={colorValue.toRgbString()} prefixCls={prefixCls} />
-        {/* 输入框 */}
+        {/* config inp */}
         <div className={`${prefixCls}-colorPart-inputGroup`}>
           <div className={`${prefixCls}-input-warp`}>
-            <input type="text" className={`${prefixCls}-colorValue-inputTxt`} value={selectModeNode} />
+            <input type="text" className={`${prefixCls}-colorValue-inputTxt`} value={modeNode} onChange={handleChangeVal} />
           </div>
           <div className={`${prefixCls}-input-number`}>
             <div className={`${prefixCls}-input-warp ${prefixCls}-input-suffix`}>
@@ -204,7 +244,6 @@ export default forwardRef<HTMLDivElement, ColorPickerProps>((props, ref) => {
             </div>
           </div>
         </div>
-        {/* 选择抗 */}
         <div className={`${prefixCls}-colorPart-select`}>
           <select onChange={(e) => onSelectChange(e)}>
             {
